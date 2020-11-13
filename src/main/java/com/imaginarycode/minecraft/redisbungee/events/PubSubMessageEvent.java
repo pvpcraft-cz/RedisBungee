@@ -14,6 +14,7 @@ import net.md_5.bungee.api.plugin.Event;
 @RequiredArgsConstructor
 @ToString
 public class PubSubMessageEvent extends Event {
+
     private final String channel;
     private final String message;
 

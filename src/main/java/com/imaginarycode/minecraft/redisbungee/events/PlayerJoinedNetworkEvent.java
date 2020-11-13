@@ -16,6 +16,7 @@ import java.util.UUID;
  */
 @ToString
 public class PlayerJoinedNetworkEvent extends Event {
+
     private final UUID uuid;
 
     public PlayerJoinedNetworkEvent(UUID uuid) {

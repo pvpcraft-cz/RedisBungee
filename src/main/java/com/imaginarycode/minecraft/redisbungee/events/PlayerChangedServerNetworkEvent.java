@@ -16,6 +16,7 @@ import java.util.UUID;
  */
 @ToString
 public class PlayerChangedServerNetworkEvent extends Event {
+
     private final UUID uuid;
     private final String previousServer;
     private final String server;

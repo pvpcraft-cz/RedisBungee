@@ -16,6 +16,7 @@ import java.util.UUID;
  */
 @ToString
 public class PlayerLeftNetworkEvent extends Event {
+
     private final UUID uuid;
 
     public PlayerLeftNetworkEvent(UUID uuid) {

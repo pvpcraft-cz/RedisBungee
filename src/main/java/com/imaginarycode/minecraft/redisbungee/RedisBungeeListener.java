@@ -35,11 +35,13 @@ public class RedisBungeeListener implements Listener {
                     .append("\n\nIt may help to try logging in again in a few minutes.\nIf this does not resolve your issue, please contact staff.")
                     .color(ChatColor.GRAY)
                     .create();
+
     private static final BaseComponent[] ONLINE_MODE_RECONNECT =
             new ComponentBuilder("Whoops! You need to reconnect.").color(ChatColor.RED)
                     .append("\n\nWe found someone online using your username. They were kicked and you may reconnect.\nIf this does not work, please contact staff.")
                     .color(ChatColor.GRAY)
                     .create();
+
     private final RedisBungee plugin;
     private final List<InetAddress> exemptAddresses;
 
