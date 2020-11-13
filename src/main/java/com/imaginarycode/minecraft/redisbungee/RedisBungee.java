@@ -41,21 +41,15 @@ import static com.google.common.base.Preconditions.checkArgument;
  * The only function of interest is {@link #getApi()}, which exposes some functions in this class.
  */
 public final class RedisBungee extends Plugin {
-    @Getter
-    private static Gson gson = new Gson();
+
+    @Getter private static Gson gson = new Gson();
     private static RedisBungeeAPI api;
-    @Getter(AccessLevel.PACKAGE)
-    private static PubSubListener psl = null;
-    @Getter
-    private JedisPool pool;
-    @Getter
-    private UUIDTranslator uuidTranslator;
-    @Getter(AccessLevel.PACKAGE)
-    private static RedisBungeeConfiguration configuration;
-    @Getter
-    private DataManager dataManager;
-    @Getter
-    private static OkHttpClient httpClient;
+    @Getter(AccessLevel.PACKAGE) private static PubSubListener psl = null;
+    @Getter private JedisPool pool;
+    @Getter private UUIDTranslator uuidTranslator;
+    @Getter(AccessLevel.PACKAGE) private static RedisBungeeConfiguration configuration;
+    @Getter private DataManager dataManager;
+    @Getter private static OkHttpClient httpClient;
     private volatile List<String> serverIds;
     private final AtomicInteger nagAboutServers = new AtomicInteger();
     private final AtomicInteger globalPlayerCount = new AtomicInteger();
@@ -223,14 +217,15 @@ public final class RedisBungee extends Plugin {
     @Override
     public void onEnable() {
         ThreadFactory factory = ((ThreadPoolExecutor) getExecutorService()).getThreadFactory();
-        getExecutorService().shutdownNow();
-        ScheduledExecutorService service;
+        ScheduledExecutorService service = Executors.newScheduledThreadPool(24, factory);
         try {
             Field field = Plugin.class.getDeclaredField("service");
             field.setAccessible(true);
-            field.set(this, service = Executors.newScheduledThreadPool(24, factory));
+            ExecutorService builtInService = (ExecutorService) field.get(this);
+            field.set(this, service);
+            builtInService.shutdownNow();
         } catch (Exception e) {
-            throw new RuntimeException("Can't replace BungeeCord thread pool with our own", e);
+            getLogger().log(Level.WARNING, "Can't replace BungeeCord thread pool with our own", e);
         }
         try {
             loadConfig();
