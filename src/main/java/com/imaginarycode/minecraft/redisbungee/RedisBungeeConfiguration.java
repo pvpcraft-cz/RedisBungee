@@ -10,6 +10,7 @@ import java.net.InetAddress;
 import java.util.List;
 
 public class RedisBungeeConfiguration {
+
     @Getter
     private final JedisPool pool;
     @Getter

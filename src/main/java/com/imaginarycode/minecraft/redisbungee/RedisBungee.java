@@ -19,7 +19,6 @@ import lombok.NonNull;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
@@ -42,20 +41,32 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 public final class RedisBungee extends Plugin {
 
-    @Getter private static Gson gson = new Gson();
     private static RedisBungeeAPI api;
-    @Getter(AccessLevel.PACKAGE) private static PubSubListener psl = null;
-    @Getter private JedisPool pool;
-    @Getter private UUIDTranslator uuidTranslator;
-    @Getter(AccessLevel.PACKAGE) private static RedisBungeeConfiguration configuration;
-    @Getter private DataManager dataManager;
-    @Getter private static OkHttpClient httpClient;
+
+    @Getter
+    private static final Gson gson = new Gson();
+
+    @Getter(AccessLevel.PACKAGE)
+    private static PubSubListener psl = null;
+    @Getter
+    private JedisPool pool;
+    @Getter
+    private UUIDTranslator uuidTranslator;
+    @Getter(AccessLevel.PACKAGE)
+    private static RedisBungeeConfiguration configuration;
+    @Getter
+    private DataManager dataManager;
+    @Getter
+    private static OkHttpClient httpClient;
+
     private volatile List<String> serverIds;
+
     private final AtomicInteger nagAboutServers = new AtomicInteger();
     private final AtomicInteger globalPlayerCount = new AtomicInteger();
+
     private Future<?> integrityCheck;
     private Future<?> heartbeatTask;
-    private boolean usingLua;
+
     private LuaManager.Script serverToPlayersScript;
     private LuaManager.Script getPlayerCountScript;
 
@@ -77,7 +88,7 @@ public final class RedisBungee extends Plugin {
         return psl;
     }
 
-    final List<String> getServerIds() {
+    public final List<String> getServerIds() {
         return serverIds;
     }
 
@@ -241,6 +252,7 @@ public final class RedisBungee extends Plugin {
                 for (String s : info.split("\r\n")) {
                     if (s.startsWith("redis_version:")) {
                         String version = s.split(":")[1];
+                        boolean usingLua;
                         if (!(usingLua = RedisUtil.canUseLua(version))) {
                             getLogger().warning("Your version of Redis (" + version + ") is not at least version 2.6. RedisBungee requires a newer version of Redis.");
                             throw new RuntimeException("Unsupported Redis version detected");
@@ -282,12 +294,14 @@ public final class RedisBungee extends Plugin {
                 }
             }, 0, 3, TimeUnit.SECONDS);
             dataManager = new DataManager(this);
+
             if (configuration.isRegisterBungeeCommands()) {
                 getProxy().getPluginManager().registerCommand(this, new RedisBungeeCommands.GlistCommand(this));
                 getProxy().getPluginManager().registerCommand(this, new RedisBungeeCommands.FindCommand(this));
                 getProxy().getPluginManager().registerCommand(this, new RedisBungeeCommands.LastSeenCommand(this));
                 getProxy().getPluginManager().registerCommand(this, new RedisBungeeCommands.IpCommand(this));
             }
+
             getProxy().getPluginManager().registerCommand(this, new RedisBungeeCommands.SendToAll(this));
             getProxy().getPluginManager().registerCommand(this, new RedisBungeeCommands.ServerId(this));
             getProxy().getPluginManager().registerCommand(this, new RedisBungeeCommands.ServerIds());
