@@ -302,38 +302,28 @@ class RedisBungeeCommands {
                 @Override
                 public void run() {
                     String proxy = args.length >= 1 ? args[0] : RedisBungee.getConfiguration().getServerId();
+
                     if (!plugin.getServerIds().contains(proxy)) {
-                        sender.sendMessage(new ComponentBuilder(proxy + " is not a valid proxy. See /serverids for valid proxies.").color(ChatColor.RED).create());
+                        send(sender, "&c" + proxy + " is not a valid proxy. See /serverids for valid proxies.");
                         return;
                     }
+
                     Set<UUID> players = RedisBungee.getApi().getPlayersOnProxy(proxy);
-                    BaseComponent[] playersOnline = new ComponentBuilder("").color(ChatColor.YELLOW)
-                            .append(playerPlural(players.size()) + " currently on proxy " + proxy + ".").create();
-                    if (args.length >= 2 && args[1].equals("showall")) {
-                        Multimap<String, UUID> serverToPlayers = RedisBungee.getApi().getServerToPlayers();
-                        Multimap<String, String> human = HashMultimap.create();
-                        for (Map.Entry<String, UUID> entry : serverToPlayers.entries()) {
-                            if (players.contains(entry.getValue())) {
-                                human.put(entry.getKey(), plugin.getUuidTranslator().getNameFromUuid(entry.getValue(), false));
-                            }
+
+                    Multimap<String, UUID> serverToPlayers = RedisBungee.getApi().getServerToPlayers();
+                    Multimap<String, String> human = HashMultimap.create();
+
+                    for (Map.Entry<String, UUID> entry : serverToPlayers.entries()) {
+                        if (players.contains(entry.getValue())) {
+                            human.put(entry.getKey(), plugin.getUuidTranslator().getNameFromUuid(entry.getValue(), false));
                         }
-                        for (String server : new TreeSet<>(human.keySet())) {
-                            TextComponent serverName = new TextComponent();
-                            serverName.setColor(ChatColor.RED);
-                            serverName.setText("[" + server + "] ");
-                            TextComponent serverCount = new TextComponent();
-                            serverCount.setColor(ChatColor.YELLOW);
-                            serverCount.setText("(" + human.get(server).size() + "): ");
-                            TextComponent serverPlayers = new TextComponent();
-                            serverPlayers.setColor(ChatColor.WHITE);
-                            serverPlayers.setText(Joiner.on(", ").join(human.get(server)));
-                            sender.sendMessage(serverName, serverCount, serverPlayers);
-                        }
-                        sender.sendMessage(playersOnline);
-                    } else {
-                        sender.sendMessage(playersOnline);
-                        sender.sendMessage(new ComponentBuilder("To see all players online, use /plist " + proxy + " showall.").color(ChatColor.YELLOW).create());
                     }
+
+                    for (String server : new TreeSet<>(serverToPlayers.keySet())) {
+                        send(sender, "&c[" + server + "]&e(" + serverToPlayers.get(server).size() + "): &f"
+                                + Joiner.on(", ").join(human.get(server)));
+                    }
+                    send(sender, "&e" + playerPlural(players.size()) + " currently on proxy " + proxy + ".");
                 }
             });
         }
