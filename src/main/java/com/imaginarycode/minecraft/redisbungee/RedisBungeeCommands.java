@@ -83,7 +83,7 @@ class RedisBungeeCommands {
     }
 
     public static String color(String str) {
-        return Strings.isNullOrEmpty(str) ? "" : str;
+        return Strings.isNullOrEmpty(str) ? "" : ChatColor.translateAlternateColorCodes('&', str);
     }
 
     public static class FindCommand extends Command {
