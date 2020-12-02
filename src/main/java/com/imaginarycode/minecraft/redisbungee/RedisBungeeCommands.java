@@ -40,6 +40,19 @@ class RedisBungeeCommands {
         return num == 1 ? num + " player is" : num + " players are";
     }
 
+    public static void send(CommandSender sender, String str) {
+        if (!Strings.isNullOrEmpty(str))
+            sender.sendMessage(format(str));
+    }
+
+    public static TextComponent format(String str) {
+        return new TextComponent(color(str));
+    }
+
+    public static String color(String str) {
+        return Strings.isNullOrEmpty(str) ? "" : ChatColor.translateAlternateColorCodes('&', str);
+    }
+
     public static class GlistCommand extends Command {
 
         private final RedisBungee plugin;
@@ -71,19 +84,6 @@ class RedisBungeeCommands {
                 }
             });
         }
-    }
-
-    public static void send(CommandSender sender, String str) {
-        if (!Strings.isNullOrEmpty(str))
-            sender.sendMessage(format(str));
-    }
-
-    public static TextComponent format(String str) {
-        return new TextComponent(color(str));
-    }
-
-    public static String color(String str) {
-        return Strings.isNullOrEmpty(str) ? "" : ChatColor.translateAlternateColorCodes('&', str);
     }
 
     public static class FindCommand extends Command {
