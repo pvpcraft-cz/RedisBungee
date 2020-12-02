@@ -105,12 +105,10 @@ class RedisBungeeCommands {
                             sender.sendMessage(PLAYER_NOT_FOUND);
                             return;
                         }
+
                         ServerInfo si = RedisBungee.getApi().getServerFor(uuid);
                         if (si != null) {
-                            TextComponent message = new TextComponent();
-                            message.setColor(ChatColor.BLUE);
-                            message.setText(args[0] + " is on " + si.getName() + ".");
-                            sender.sendMessage(message);
+                            send(sender, "&3" + args[0] + " is on " + si.getName() + ".");
                         } else {
                             sender.sendMessage(PLAYER_NOT_FOUND);
                         }
@@ -181,12 +179,11 @@ class RedisBungeeCommands {
                             sender.sendMessage(PLAYER_NOT_FOUND);
                             return;
                         }
+
                         InetAddress ia = RedisBungee.getApi().getPlayerIp(uuid);
+
                         if (ia != null) {
-                            TextComponent message = new TextComponent();
-                            message.setColor(ChatColor.GREEN);
-                            message.setText(args[0] + " is connected from " + ia.toString() + ".");
-                            sender.sendMessage(message);
+                            send(sender, "&a" + args[0] + " is connected from " + ia.toString() + ".");
                         } else {
                             sender.sendMessage(PLAYER_NOT_FOUND);
                         }
@@ -219,10 +216,7 @@ class RedisBungeeCommands {
                         }
                         String proxy = RedisBungee.getApi().getProxy(uuid);
                         if (proxy != null) {
-                            TextComponent message = new TextComponent();
-                            message.setColor(ChatColor.GREEN);
-                            message.setText(args[0] + " is connected to " + proxy + ".");
-                            sender.sendMessage(message);
+                            send(sender, "&a" + args[0] + " is connected to " + proxy + ".");
                         } else {
                             sender.sendMessage(PLAYER_NOT_FOUND);
                         }
@@ -247,10 +241,7 @@ class RedisBungeeCommands {
             if (args.length > 0) {
                 String command = Joiner.on(" ").skipNulls().join(args);
                 RedisBungee.getApi().sendProxyCommand(command);
-                TextComponent message = new TextComponent();
-                message.setColor(ChatColor.GREEN);
-                message.setText("Sent the command /" + command + " to all proxies.");
-                sender.sendMessage(message);
+                send(sender, "&aSent the command /" + command + " to all proxies.");
             } else {
                 sender.sendMessage(NO_COMMAND_SPECIFIED);
             }
@@ -267,24 +258,18 @@ class RedisBungeeCommands {
 
         @Override
         public void execute(CommandSender sender, String[] args) {
-            TextComponent textComponent = new TextComponent();
-            textComponent.setText("You are on " + RedisBungee.getApi().getServerId() + ".");
-            textComponent.setColor(ChatColor.YELLOW);
-            sender.sendMessage(textComponent);
+            send(sender, "&eYou are on " + RedisBungee.getApi().getServerId() + ".");
         }
     }
 
     public static class ServerIds extends Command {
         public ServerIds() {
-            super("serverids", "redisbungee.command.serverids");
+            super("serverids", "redisbungee.command.serverids", "servers");
         }
 
         @Override
         public void execute(CommandSender sender, String[] strings) {
-            TextComponent textComponent = new TextComponent();
-            textComponent.setText("All server IDs: " + Joiner.on(", ").join(RedisBungee.getApi().getAllServers()));
-            textComponent.setColor(ChatColor.YELLOW);
-            sender.sendMessage(textComponent);
+            send(sender, "&eServers: " + Joiner.on(", ").join(RedisBungee.getApi().getAllServers()));
         }
     }
 
@@ -339,12 +324,9 @@ class RedisBungeeCommands {
 
         @Override
         public void execute(final CommandSender sender, final String[] args) {
-            TextComponent poolActiveStat = new TextComponent("Currently active pool objects: " + plugin.getPool().getNumActive());
-            TextComponent poolIdleStat = new TextComponent("Currently idle pool objects: " + plugin.getPool().getNumIdle());
-            TextComponent poolWaitingStat = new TextComponent("Waiting on free objects: " + plugin.getPool().getNumWaiters());
-            sender.sendMessage(poolActiveStat);
-            sender.sendMessage(poolIdleStat);
-            sender.sendMessage(poolWaitingStat);
+            send(sender, "Currently active pool objects: " + plugin.getPool().getNumActive());
+            send(sender, "Currently idle pool objects: " + plugin.getPool().getNumIdle());
+            send(sender, "Waiting on free objects: " + plugin.getPool().getNumWaiters());
         }
     }
 }
