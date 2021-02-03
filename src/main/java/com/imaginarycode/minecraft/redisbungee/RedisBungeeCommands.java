@@ -14,10 +14,7 @@ import net.md_5.bungee.api.plugin.Command;
 
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * This class contains subclasses that are used for the commands RedisBungee overrides or includes: /glist, /find and /lastseen.
@@ -53,11 +50,11 @@ class RedisBungeeCommands {
         return Strings.isNullOrEmpty(str) ? "" : ChatColor.translateAlternateColorCodes('&', str);
     }
 
-    public static class GlistCommand extends Command {
+    public static class GlobalListCommand extends Command {
 
         private final RedisBungee plugin;
 
-        GlistCommand(RedisBungee plugin) {
+        GlobalListCommand(RedisBungee plugin) {
             super("glist", "bungeecord.command.list", "redisbungee", "rglist");
             this.plugin = plugin;
         }
@@ -264,7 +261,7 @@ class RedisBungeeCommands {
 
     public static class ServerIds extends Command {
         public ServerIds() {
-            super("serverids", "redisbungee.command.serverids", "servers");
+            super("serverids", "redisbungee.command.serverids", "servers", "proxies");
         }
 
         @Override
@@ -273,10 +270,10 @@ class RedisBungeeCommands {
         }
     }
 
-    public static class PlistCommand extends Command {
+    public static class PlayerListCommand extends Command {
         private final RedisBungee plugin;
 
-        PlistCommand(RedisBungee plugin) {
+        PlayerListCommand(RedisBungee plugin) {
             super("plist", "redisbungee.command.plist", "rplist");
             this.plugin = plugin;
         }

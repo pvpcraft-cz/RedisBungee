@@ -14,7 +14,6 @@ import net.md_5.bungee.api.AbstractReconnectHandler;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
@@ -63,8 +62,7 @@ public class RedisBungeeListener implements Listener {
 
                         if (player != null) {
                             event.setCancelled(true);
-                            // TODO: Make it accept a BaseComponent[] like everything else.
-                            event.setCancelReason(TextComponent.toLegacyText(ONLINE_MODE_RECONNECT));
+                            event.setCancelReason(ONLINE_MODE_RECONNECT);
                             return null;
                         }
                     }
@@ -72,8 +70,7 @@ public class RedisBungeeListener implements Listener {
                     for (String s : plugin.getServerIds()) {
                         if (jedis.sismember("proxy:" + s + ":usersOnline", event.getConnection().getUniqueId().toString())) {
                             event.setCancelled(true);
-                            // TODO: Make it accept a BaseComponent[] like everything else.
-                            event.setCancelReason(TextComponent.toLegacyText(ALREADY_LOGGED_IN));
+                            event.setCancelReason(ALREADY_LOGGED_IN);
                             return null;
                         }
                     }
@@ -154,6 +151,7 @@ public class RedisBungeeListener implements Listener {
             final String currentChannel = event.getTag();
             final byte[] data = Arrays.copyOf(event.getData(), event.getData().length);
             plugin.getProxy().getScheduler().runAsync(plugin, new Runnable() {
+                @SuppressWarnings("UnstableApiUsage")
                 @Override
                 public void run() {
                     ByteArrayDataInput in = ByteStreams.newDataInput(data);
@@ -217,7 +215,8 @@ public class RedisBungeeListener implements Listener {
                                     includesUsers = true;
                                     break;
                                 default:
-                                    // TODO: Should I raise an error?
+                                    // TO.DO: Should I raise an error?
+                                    // Nah, let's go easy on them. ~w
                                     return;
                             }
 

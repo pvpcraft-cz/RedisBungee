@@ -15,6 +15,7 @@ import java.util.UUID;
 @VisibleForTesting
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RedisUtil {
+
     protected static void createPlayer(ProxiedPlayer player, Pipeline pipeline, boolean fireEvent) {
         createPlayer(player.getPendingConnection(), pipeline, fireEvent);
         if (player.getServer() != null)

@@ -296,7 +296,7 @@ public final class RedisBungee extends Plugin {
             dataManager = new DataManager(this);
 
             if (configuration.isRegisterBungeeCommands()) {
-                getProxy().getPluginManager().registerCommand(this, new RedisBungeeCommands.GlistCommand(this));
+                getProxy().getPluginManager().registerCommand(this, new RedisBungeeCommands.GlobalListCommand(this));
                 getProxy().getPluginManager().registerCommand(this, new RedisBungeeCommands.FindCommand(this));
                 getProxy().getPluginManager().registerCommand(this, new RedisBungeeCommands.LastSeenCommand(this));
                 getProxy().getPluginManager().registerCommand(this, new RedisBungeeCommands.IpCommand(this));
@@ -306,7 +306,7 @@ public final class RedisBungee extends Plugin {
             getProxy().getPluginManager().registerCommand(this, new RedisBungeeCommands.ServerId(this));
             getProxy().getPluginManager().registerCommand(this, new RedisBungeeCommands.ServerIds());
             getProxy().getPluginManager().registerCommand(this, new RedisBungeeCommands.PlayerProxyCommand(this));
-            getProxy().getPluginManager().registerCommand(this, new RedisBungeeCommands.PlistCommand(this));
+            getProxy().getPluginManager().registerCommand(this, new RedisBungeeCommands.PlayerListCommand(this));
             getProxy().getPluginManager().registerCommand(this, new RedisBungeeCommands.DebugCommand(this));
             api = new RedisBungeeAPI(this);
             getProxy().getPluginManager().registerListener(this, new RedisBungeeListener(this, configuration.getExemptAddresses()));
